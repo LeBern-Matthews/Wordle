@@ -1,8 +1,6 @@
 import random
 #selects random word afive letter word
 
-GAMEROUND=1
-
 winner_word=[]
 
 def word():
@@ -13,6 +11,7 @@ def word():
     winner_word=list(randmword)
     wordsPTR.close()
     print(winner_word)
+    return winner_word
 word()
 
 getscore=open("Gamestreak.txt").read()
@@ -21,9 +20,8 @@ def iswords(user_input):
     with open("WORDS.txt", "r") as words:
         for word in words:
             if user_input in word:
+                print(f"{user_input} is in words" )
                 return True
-
-
 
 #states of a letter
 # a letter can be:
@@ -48,8 +46,10 @@ def state(winner_word, user_guess):
             else:
                 game_state[user_position]=-1
     #user_position+=1
-    #print(game_state, "gamestate")
-        
+    print(game_state, "gamestate")
+    return game_state
+
+
 def highscore(round_num,score):
     if int(round_num)>int(score):
         with open('Gamestreak.txt', 'w') as file:
