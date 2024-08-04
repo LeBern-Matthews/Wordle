@@ -1,6 +1,5 @@
 
 import tkinter as tk
-from time import sleep
 from backend import *
 
 #Colors
@@ -16,7 +15,6 @@ ERROR_RED='#B22222'
 entry_pos=[]
 current_pos=0
 game_round=1
-
 
 #storing the current guess in a string
 guess=""
@@ -41,15 +39,13 @@ game = tk.Tk()
 game.title("Wordle clone")
 #game.geometry("450x500")
 
-
 #a function that is called evertime a letter is pressed
-def funtionality(event):
+def accept_letters(event):
     global current_pos, guess, guess_number
     
     if int(current_pos)<=29:
         display=event.char
 
-        print(guess_number)
         
         if (display!="'" and display!='"' and display!='][/;.,```````:'and display!='['
             and display!=']'and display!='{'and display!='}'and display!='`'
@@ -61,30 +57,58 @@ def funtionality(event):
             guess+=display.lower()
             print(guess)
             guess_number+=1
-    else:
-        pass
-    
 
+def redo():
+    global entry_pos, current_pos, game_round, guess, guess_number, game_state, winner_word
+    #storing the position of buttons
+    game_state=[-1,-1,-1,-1,-1]
+    entry_pos=[]
+    current_pos=0
+    game_round=1
+
+    #storing the current guess in a string
+    guess=""
+    guess_number=1
+
+    
+    game.withdraw()
+    outline.destroy()
+    grid.destroy()
+    end_frame.destroy()
+
+    winner_word=word()
+    print("After word functio, winner_word is", winner_word)
+    layout()
+    
+    game.deiconify()
+    
 def newround(event):
-    global guess, current_pos, guess_number,game_round, game_state
+    global guess, current_pos, guess_number,game_round, game_state, end_frame, winner_word
     
     if guess_number%6==0:
         
         if iswords(guess):
-            state(winner_word, list(guess))
+            game_state=state(winner_word, list(guess))
+            print(game_state,"line 92 after setting the state")
+            
             if game_state==[1,1,1,1,1]:
                 end_frame=tk.Frame(game, bg=BACKGROUND, highlightthickness=2)
                 win=tk.Label(end_frame,text="YOU WON!", font="helvatica, 35", bg=BACKGROUND,fg=OFF_WHITE )
                 end_btn=tk.Button(end_frame, text="End", bg=BACKGROUND,fg=OFF_WHITE,activebackground=ERROR_RED, command= game.destroy)
+                redo_btn=tk.Button(end_frame, text="Next!", bg=BACKGROUND,fg=OFF_WHITE,activebackground=GREEN, command=redo)
                 win.pack()
-                end_btn.pack(padx=40)
+                end_btn.pack(padx=40, side="left")
+                redo_btn.pack(side="left")
                 
                 end_frame.place(x=100, y=260)
                 highscore(game_round,getscore)
+            else:
+                guess_number+=1
             guess=""
 
-            guess_number+=1
             
+            print(winner_word,"line 108")
+            print(game_state,"line 109")
             current_pos-=5
             for status in game_state:
                 if status==1:
@@ -96,25 +120,29 @@ def newround(event):
                 current_pos+=1
             
             if game_round==6:
+                correct_word=''
+                for letter in winner_word:
+                    correct_word+=letter
+
                 end_frame=tk.Frame(game, bg=BACKGROUND, highlightthickness=2)
-                win=tk.Label(end_frame,text="YOU LOST!", font="helvatica, 35", bg=BACKGROUND,fg=OFF_WHITE )
+                win=tk.Label(end_frame,text=f"The word was {correct_word.upper()}", font="helvatica, 15", bg=BACKGROUND,fg=OFF_WHITE )
                 end_btn=tk.Button(end_frame, text="End", bg=BACKGROUND,fg=OFF_WHITE,activebackground=ERROR_RED, command= game.destroy)
+                redo_btn=tk.Button(end_frame, text="Next!", bg=BACKGROUND,fg=OFF_WHITE,activebackground=GREEN, command=redo)
                 win.pack()
-                end_btn.pack(padx=40)
-                
+                end_btn.pack(padx=30, side="left")
+                redo_btn.pack(side="left")
                 end_frame.place(x=100, y=260)
                 highscore(game_round,getscore)
             game_round+=1
-            
-    else:
-        print("no")
-        
+
+
     
 def nothing(event):
     pass
 
 #filling grid grid
 def layout():
+    global outline, grid
     #label creation
     outline=tk.Frame(game,bg=BACKGROUND, name="rawwww")
     welcome=tk.Label(outline, text = "Welcome to wordle!",fg=OFF_WHITE,bg=BACKGROUND, font="calibri, 20",justify="left",width=25) 
@@ -143,7 +171,7 @@ def layout():
                         highlightthickness=2,
                         font="ClearSans, 30",
                         justify="center",
-                        fg=OFF_WHITE, relief="raised")
+                        fg=OFF_WHITE, relief="raised", activebackground=BACKGROUND)
             entry.grid(row=ROW+5, column=COLUMNS)
             entry_pos.append(entry)
     grid.pack()
@@ -223,7 +251,7 @@ def Keybinds():
     game.bind("<Num_Lock>",nothing)
     game.bind("<Scroll_Lock>",nothing)
 
-    game.bind("<Key>",funtionality)
+    game.bind("<Key>",accept_letters)
 Keybinds()        
 
 game['background']=BACKGROUND
