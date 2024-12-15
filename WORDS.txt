@@ -1925,6 +1925,8 @@ phone
 photo
 piano
 picks
+picky
+pinky
 piece
 piers
 piety

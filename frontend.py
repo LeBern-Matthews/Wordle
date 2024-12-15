@@ -55,7 +55,6 @@ def accept_letters(event):
             entry_pos[current_pos]["text"]=display.upper()
             current_pos+=1
             guess+=display.lower()
-            print(guess)
             guess_number+=1
 
 def redo():
@@ -77,7 +76,6 @@ def redo():
     end_frame.destroy()
 
     winner_word=word()
-    print("After word functio, winner_word is", winner_word)
     layout()
     
     game.deiconify()
@@ -89,7 +87,6 @@ def newround(event):
         
         if iswords(guess):
             game_state=state(winner_word, list(guess))
-            print(game_state,"line 92 after setting the state")
             
             if game_state==[1,1,1,1,1]:
                 end_frame=tk.Frame(game, bg=BACKGROUND, highlightthickness=2)
@@ -107,8 +104,6 @@ def newround(event):
             guess=""
 
             
-            print(winner_word,"line 108")
-            print(game_state,"line 109")
             current_pos-=5
             for status in game_state:
                 if status==1:
@@ -134,7 +129,6 @@ def newround(event):
                 end_frame.place(x=100, y=260)
                 highscore(game_round,getscore)
             game_round+=1
-
 
     
 def nothing(event):
@@ -188,7 +182,6 @@ def delete(event):
         current_pos-=1
         entry_pos[current_pos]["text"]=""
         guess = guess[:-1]
-        print(guess)
         
     match game_round:
         case 1:
