@@ -10,7 +10,6 @@ def word():
     randmword=random.choice(wordsPTR.read().split())
     winner_word=list(randmword)
     wordsPTR.close()
-    print(winner_word)
     return winner_word
 word()
 
@@ -20,7 +19,6 @@ def iswords(user_input):
     with open("WORDS.txt", "r") as words:
         for word in words:
             if user_input in word:
-                print(f"{user_input} is in words" )
                 return True
 
 #states of a letter
@@ -37,7 +35,6 @@ def state(winner_word, user_guess):
      #defaults all the states to not in the word
 
     for user_position, user_guess[user_position] in enumerate(user_guess):
-        print(user_position,user_guess[user_position])
         for winner_position, winner_word[winner_position] in enumerate(winner_word):
             if user_guess[user_position]==winner_word[user_position]:
                 game_state[user_position]=1
@@ -46,7 +43,6 @@ def state(winner_word, user_guess):
             else:
                 game_state[user_position]=-1
     #user_position+=1
-    print(game_state, "gamestate")
     return game_state
 
 
